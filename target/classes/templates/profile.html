@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>码匠社区</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <link rel="stylesheet" href="/css/community.css">
+</head>
+<body>
+
+<div th:replace="~{top_bar :: top}"></div>
+<div class="container-fluid main">
+    <div class="row  main">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" th:if="${section}=='question'">
+            <h2><span class="glyphicon glyphicon-list" aria-hidden="true" th:text="${sectionName}"></span></h2>
+            <hr>
+            <div class="media" th:each="pageInfo : ${pageInfos.list}">
+                <div class="media-body">
+                    <a href="" th:href="@{'/question/'+${pageInfo.id}}">
+                        <h4 class="media-heading title_style" th:text="${pageInfo.title}">Media heading</h4>
+                    </a>
+                    <span class="font_style" th:text="${pageInfo.likeCount}"></span>
+                    <span class="font_style">点赞</span>
+                    <span class="font_style" th:text="${pageInfo.viewCount}"></span>
+                    <span class="font_style">浏览</span>
+                    <span class="font_style" th:text="${pageInfo.commentCount}"></span>
+                    <span class="font_style">评论</span>
+                    <span class="font_style">发布日期</span>
+                    <span th:text="${#calendars.format(pageInfo.gmtCreate,'dd MMMM yyyy')}"></span>
+                </div>
+            </div>
+            <nav aria-label="Page navigation">
+                <ul class="pagination">
+                    <li>
+                        <a href="#" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    <li><a href="#" th:href="@{/profile/question(pageNum=${firstPage})}">首页</a></li>
+                    <li th:if="${pageNum}>1"><a href="#" th:href="@{/profile/question(pageNum=${pageNum}-1)}">上一页</a>
+                    </li>
+                    <!--<li><a th:href="@{/(pageNum=${pageInfos.hasPreviousPage}?${pageInfos.prePage}:1)}">上一页</a></li>-->
+                    <li><a th:href="@{/profile/question(pageNum=${pageNum}+1)}">下一页</a></li>
+                    <li><a th:href="@{/profile/question(pageNum=${30})}">最后一页</a></li>
+                    <li>
+                        <a href="#" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12" th:if="${section}=='replies'">
+            <h2><span class="glyphicon glyphicon-list" aria-hidden="true" th:text="${sectionName}"></span></h2>
+            <hr>
+            <h3>我的未读回复</h3>
+            <div th:if="${notifications}==null" style="    font-size: 18px;">
+                <span>暂无未读回复</span>
+            </div>
+            <div th:if="${notifications}!=null" style="    font-size: 18px;" th:each="notification : ${notifications}">
+                <a href=""><span th:text="${notification.nitifierName}"> </span></a>
+                <span>回复了提问
+                    <a href="" th:href="@{'/question/'+${notification.outerid}}" th:text="${notification.QuestionTitle}">
+                    </a>
+                </span>
+                <span class="label label-danger">未读</span>
+                <br>
+                <span class="font_style">回复时间：</span>
+                <span class="font_style" th:text="${#calendars.format(notification.gmtCreate,'yyyy-MM-dd')}"
+                ></span><br>
+                <hr>
+            </div>
+            <h3>我的已读回复</h3>
+            <div th:if="${IsReadnotifications}==null" style="    font-size: 18px;">
+                <span>暂无已读回复</span>
+            </div>
+            <div th:if="${IsReadnotifications}!=null" style="    font-size: 18px;" th:each="IsReadnotification : ${IsReadnotifications}">
+                <a href=""><span th:text="${IsReadnotification.nitifierName}"> </span></a>
+                <span>回复了提问
+                    <a href="" th:href="@{'/question/'+${IsReadnotification.outerid}}" th:text="${IsReadnotification.QuestionTitle}">
+                    </a>
+                </span>
+                <span class="label label-success">已读</span>
+                <br>
+                <span class="font_style">回复时间：</span>
+                <span class="font_style" th:text="${#calendars.format(IsReadnotification.gmtCreate,'yyyy-MM-dd')}"
+                ></span><br>
+                <hr>
+            </div>
+
+        </div>
+
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <div class="list-group profile_section">
+                <a href="/profile/question" class="list-group-item"
+                   th:classappend="${section=='question'}?'active':''">
+                    我的提问
+                </a>
+                <a href="/profile/replies" class="list-group-item"
+                   th:classappend="${section=='replies'}?'active':''">我的回复</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer" th:replace="~{footer_bar :: foot}"></div>
+
+</body>
+</html>

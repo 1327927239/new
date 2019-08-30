@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+
+    <title>码匠社区</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap-theme.min.css">
+    <script src="/js/jquery-3.4.1.min.js" ></script>
+    <script src="/js/bootstrap.min.js" type="application/javascript"></script>
+    <script src="/js/community.js" type="application/javascript"></script>
+    <link rel="stylesheet" href="/css/community.css">
+    <script src="/js/community.js"></script>
+    <link rel="stylesheet" href="/css/editormd.preview.css">
+    <script src="/js/editormd.js" type="application/javascript"></script>
+    <script src="/lib/marked.min.js" type="application/javascript"></script>
+    <script src="/lib/prettify.min.js" type="application/javascript"></script>
+</head>
+<body>
+
+<div th:replace="~{top_bar :: top}"></div>
+<div class="container-fluid ">
+    <div class="row  main">
+        <div class="col-lg-9 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <h4><span aria-hidden="true" th:text="${questionAndUser.title}"></span>
+                </h4>
+                <span class="font_style" th:text="${questionAndUser.likeCount}"></span>
+                <span class="font_style">点赞 |</span>
+                <span class="font_style" th:text="${questionAndUser.viewCount}"></span>
+                <span class="font_style">浏览 |</span>
+                <span class="font_style" th:text="${questionAndUser.commentCount}"></span>
+                <span class="font_style">评论 |</span>
+                <span class="font_style">发布日期</span>
+                <span class="font_style"
+                      th:text="${#calendars.format(questionAndUser.gmtCreate,'dd MMMM yyyy')}"></span>
+                <hr>
+                <div>
+                <!--<span class="question_description_font_size" style="font-size: 25px"-->
+                      <!--th:text="${questionAndUser.description}"></span><br>-->
+                    <div id="test-markdown-view">
+                        <textarea style="font-size: 25px" th:text="${questionAndUser.description}" ></textarea>
+                    </div>
+                    <br>
+                    <script type="text/javascript">
+                        $(function() {
+                            var testView = editormd.markdownToHTML("test-markdown-view", {
+                                // markdown : "[TOC]\n### Hello world!\n## Heading 2", // Also, you can dynamic set Markdown text
+                                // htmlDecode : true,  // Enable / disable HTML tag encode.
+                                // htmlDecode : "style,script,iframe",  // Note: If enabled, you should filter some dangerous HTML tags for website security.
+                            });
+                        });
+                    </script>
+
+
+
+
+                </div>
+                <hr>
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <span style="color: #999;font-size: 14px">标签： </span>
+                    <span class="label label-info" style="margin-right: 10px;padding-left: 0px;"
+                          th:each="tag:${questionAndUser.tag.split(',')}">
+                        <span class="glyphicon glyphicon-tags"></span>
+                        <span th:text="${tag}"></span>
+                    </span>
+                    <hr>
+                </div>
+                <hr>
+                <a th:if="${session.user!=null && session.user.accountId ==questionAndUser.user.accountId }"
+                   th:href="@{'/publish/'+${questionAndUser.id}}" href="" style="color: #999;font-size: 14px"
+                   class="menu">
+                <span class="glyphicon glyphicon-pencil" aria-hidden="true">编辑
+                </span>
+                </a>
+                <div style="padding-top: 15px;color: #999999">
+                    <span th:text="${questionAndUser.commentCount}"></span>个回复
+                </div>
+                <hr>
+            </div>
+
+
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" th:each="commentAndCreator:${commentAndCreators}">
+                <div class="media-left">
+                    <img class="media-object image_size img-rounded" th:src="${commentAndCreator.user.avatarUrl}">
+                </div>
+                <div class="media-body">
+                    <span style="font-size: 20px;color: #2aabd2;margin-top: 10px;padding-top: 10px"
+                          th:text="${commentAndCreator.user.name}"></span>
+                    <br>
+                    <span th:text="${commentAndCreator.comment}">
+                    </span>
+                    <br>
+                    <span class="glyphicon glyphicon-thumbs-up aq" style="cursor: pointer;"
+                          hover="color:#499ef3;"
+                          aria-hidden="true"></span>
+                    <span class="font_style" style="float: right "
+                          th:text="${#calendars.format(questionAndUser.gmtCreate,'dd MMMM yyyy')}">
+
+                    </span>
+                </div>
+                <hr>
+            </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" id="comment_close" th:if="${session.user}!=null">
+                <div class="media-left">
+                    <img class="media-object image_size img-rounded" th:src="${session.user.avatarUrl}">
+                </div>
+                <div class="media-body">
+                        <span style="font-size: 20px;color: #2aabd2;margin-top: 10px;padding-top: 10px"
+                              th:text="${session.user.name}"></span>
+                </div>
+                <input type="hidden" id="question_id" th:value="${questionAndUser.id}">
+                <textarea id="comment_id" style="margin-top: 10px" class="form-control" rows="6"></textarea>
+                <button style="float: right;margin-top: 10px;margin-bottom: 10px" type="button" class="btn btn-success"
+                        onclick="post_comment()">回复
+                </button>
+            </div>
+        </div>
+        <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12">
+            <div class="list-group profile_section">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <h4>发起人:</h4>
+                    <div class="media-left">
+                        <img class="media-object image_size img-rounded" th:src="${questionAndUser.user.avatarUrl}">
+                    </div>
+                    <div class="media-body">
+                        <span style="font-size: 20px;color: #2aabd2;margin-top: 15px "
+                              th:text="${questionAndUser.user.name}"></span>
+                    </div>
+                    <hr>
+                    <h4>推荐问题</h4>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 img-thumbnail" style="margin-bottom: 20px">
+                        <img src="/images/photo.jpg" height="195" width="100%"/>
+                    </div>
+                    <hr>
+                    <h4>相关问题</h4>
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <ul th:each="questionsByTag:${questionsByTags}">
+                            <a style="cursor: pointer;color: #155faa;" th:href="@{'/question/'+${questionsByTag.id}}">
+                                <li th:text="${questionsByTag.title}"></li>
+                            </a>
+                        </ul>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="footer" th:replace="~{footer_bar :: foot}"></div>
+
+</body>
+</html>

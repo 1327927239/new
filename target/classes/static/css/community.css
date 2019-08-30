@@ -1,0 +1,51 @@
+.main{
+    /*和上下左右的边距*/
+    margin: 30px;
+    background-color: white;
+}
+body{
+    background-color: #efefef;
+}
+.btn-publish{
+    float: right;
+    margin-bottom: 15px;
+}
+.image_size{
+    width: 38px;
+    height: 38px;
+}
+.title_style{
+    text-decoration: none;
+    color: #499ef3;
+}
+.font_style{
+    font-size: 12px;
+    font-weight: normal;
+    color: #999;
+}
+.profile_section{
+    margin-top: 15px;
+}
+/*question页面的问题描述的字体大小*/
+.question_description_font_size{
+    font-size: 30px;
+}
+/*question页面的问题描述的上下边距*/
+.question_main{
+    /*和上下左右的边距*/
+    margin: 0px;
+    background-color: white;
+
+}
+.menu{
+    color: #999;
+    font-size: 13px;
+}
+.jumbotron {
+    /*和上下左右的边距*/
+    margin: 30px;
+    background-color: white;
+}
+.aq:hover {
+    color:#499ef3;
+}
